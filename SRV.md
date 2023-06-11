@@ -1,15 +1,19 @@
 # SRV
+
 ## Настройка хостнеймов
+
 ```bash
 hostnamectl set-hostname SRV
 ```
+
 ## [Настройка сети]
 
 `nmtui` -- интерактивно \
 `nmcli` -- командный интерфейс
 
 > [1] Настройка интерйфесов:
-```
+
+``` bash
 --------------------------------------------------
 | ens4 | 192.168.100.200/24 | 192.168.100.254/24 |
 --------------------------------------------------
@@ -18,12 +22,14 @@ hostnamectl set-hostname SRV
 > [2] Настройка DNS:
 
 Установка пакетов:
-```
+
+```bash
 apt install -yq network-manager dnsutils dnsmasq 
 ```
 
 Настройка DNS `/etc/dnsmasq.conf:
-```
+
+```bash
 listen-address=192.168.100.200,127.0.0.1
 
 domain=int.demo.wsr
@@ -46,7 +52,8 @@ host-record=srv.int.demo.wsr,192.168.100.200
 ```
 
 Перезагрузка службы:
-```
+
+```bash
 systemctl restart dnsmasq
 systemctl enable dnsmasq
 ```
