@@ -1,0 +1,1 @@
+scp ./*.md root@10.0.39.{0..11}:/vmfs/volumes/Datastore/

@@ -81,3 +81,27 @@ iptables -A FORWARD -d 10.0.0.1 -s 10.0.0.2 -j ACCEPT
 ip route add 10.0.0.2 dev ens4
 ip route add 10.0.0.1 dev ens5
 ```
+
+> [7] Настройка DNS службы
+
+Установка `dnsmasq`:
+```
+apt install -yq dnsmasq
+```
+
+Редактирование конфига `/etc/dnsmasq.conf`: 
+```
+listen-address=3.3.3.1,4.4.4.1,5.5.5.1
+domain=demo.wsr
+server=/int.demo.wsr/192.168.100.200
+
+address=/isp.demo.wsr/3.3.3.1
+address=/www.demo.wsr/4.4.4.100
+address=/www.demo.wsr/5.5.5.100
+```
+
+Перезагрузка службы:
+```
+systemctl restart dnsmasq
+systemctl enable dnsmasq
+```
