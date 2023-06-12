@@ -32,11 +32,14 @@ sysctl -p
 
 ```bash
 iptables -F
+iptables -F -t nat
+iptables -F -t filter
 # Allow Network ..
 ## 4.4.4.0/24 to 192.168.100.0/24 ...
-iptables -A FORWARD -s 4.4.4.0/24 -d 192.168.100.0/24 -j ACCEPT
+iptables -A FORWARD -s 4.4.4.0/24       -d 192.168.100.0/24 -j ACCEPT
 ## 192.168.100.0/24 to 4.4.4.0/24 
-iptables -A FORWARD -d 4.4.4.0/24 -s 192.168.100.0/24 -j ACCEPT
+iptables -A FORWARD -d 4.4.4.0/24       -s 192.168.100.0/24 -j ACCEPT
+iptables -A FORWARD -d 192.168.100.0/24 -s 192.168.100.0/24 -j ACCEPT
 iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o ens4 -j SNAT --to-source 4.4.4.100
 
 # Block Network
@@ -71,7 +74,9 @@ ip route add to 10.0.0.2 via 4.4.4.1 dev ens4
 
 Разрешить:
 
-- __DNS__ - 53
+- __DNS__ - 53/udp
+- __NTP__ - 123/udp
+- __GRE__ - 47
 - __HTTP__ - 80
 - __HTTPS__ - 443
 - __ICMP__
@@ -81,13 +86,16 @@ ip route add to 10.0.0.2 via 4.4.4.1 dev ens4
 
 ```bash
 # Allow
-iptables -t filter -A INPUT  ! -s 192.168.100.0/24 -p tcp --dport 22 -j ACCEPT
-iptables -t filter -A INPUT  ! -s 192.168.100.0/24 -p tcp --dport 443 -j ACCEPT
-iptables -t filter -A INPUT  ! -s 192.168.100.0/24 -p tcp --dport 80 -j ACCEPT
-iptables -t filter -A INPUT  ! -s 192.168.100.0/24 -p udp --dport 53 -j ACCEPT
-iptables -t filter -A INPUT  ! -s 192.168.100.0/24 -p icmp -j ACCEPT
+iptables -t filter -A INPUT ! -s 192.168.100.0/24 -p tcp --dport 22 -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
+iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 123 -j ACCEPT
+iptables -t filter -A INPUT -s 5.5.5.100 -d 4.4.4.100 -p tcp --dport 47 -j ACCEPT
+iptables -t filter -A INPUT ! -s 192.168.100.0/24 -p icmp -j ACCEPT
 
 # Block
+iptables -t filter -A INPUT -d 4.4.4.100 -p udp --dport 53 -j ACCEPT
 iptables -t filter -A INPUT  ! -s 192.168.100.0/24 -j DROP
 ```
 

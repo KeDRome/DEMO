@@ -34,6 +34,7 @@ listen-address=192.168.100.200,127.0.0.1
 
 domain=int.demo.wsr
 server=/int.demo.wsr/127.0.0.1
+server=/demo.wsr/4.4.4.1
 
 address=/web-r.int.demo.wsr/192.168.100.100
 address=/web-l.int.demo.wsr/172.16.100.100

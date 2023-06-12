@@ -112,3 +112,22 @@ address=/www.demo.wsr/5.5.5.100
 systemctl restart dnsmasq
 systemctl enable dnsmasq
 ```
+
+> [8] Настройка NTP Службы:
+
+Установка службы
+
+```bash
+apt install ntp -yq
+```
+
+Настройка службы `/etc/ntp.conf`:
+
+```bash
+<Удалите всё что начинается с pool>
+restict 192.168.100.0/24
+restict 172.16.100.0/24
+
+server 127.127.1.0
+fudge 127.127.1.0 stratum 4
+```

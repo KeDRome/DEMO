@@ -83,12 +83,22 @@ ip route add to 10.0.0.1 via 5.5.5.1 dev ens5
 iptables -t filter -A INPUT  ! -s 172.16.100.0/24 -p tcp --dport 22 -j ACCEPT
 iptables -t filter -A INPUT  ! -s 172.16.100.0/24 -p tcp --dport 443 -j ACCEPT
 iptables -t filter -A INPUT  ! -s 172.16.100.0/24 -p tcp --dport 80 -j ACCEPT
-iptables -t filter -A INPUT  ! -s 172.16.100.0/24 -p udp --dport 53 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 53 -j ACCEPT
+iptables -t filter -A INPUT -p udp --dport 123 -j ACCEPT
+iptables -t filter -A INPUT -s 4.4.4.100 -d 5.5.5.100 -p tcp --dport 47 -j ACCEPT
 iptables -t filter -A INPUT  ! -s 172.16.100.0/24 -p icmp -j ACCEPT
 iptables -t filter -A INPUT  -s 10.0.0.2 -j ACCEPT 
+iptables -t filter -A INPUT -s 5.5.5.1 -j ACCEPT
+iptables -t filter -A INPUT -s 4.4.4.100 -d 5.5.5.100 -j ACCEPT
+
 
 # Block
-iptables -t filter -A INPUT  ! -s 172.16.100.0/24 -j DROP
+iptables -t filter -A INPUT -s 172.16.100.0/24 -j ACCEPT
+iptables -t filter -A INPUT -s 192.168.100.0/24 -j DROP
+iptables -t filter -A INPUT -s 5.5.5.0/24 -j DROP
+iptables -t filter -A INPUT -s 4.4.4.0/24 -j DROP
+iptables -t filter -A INPUT -s 3.3.3.0/24 -j DROP
+
 ```
 
 > [6] Проброс порта
